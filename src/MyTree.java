@@ -2,6 +2,10 @@ import java.util.Scanner;
 
 public class MyTree {
     public static void main(String[] args) {
+
+        System.setProperty("file.encoding", "CP857");
+
+
         if(args.length != 1){
             System.err.println("java MyTree sozluk.txt");
             System.exit(1);
@@ -13,12 +17,15 @@ public class MyTree {
 
         Scanner scanner = new Scanner(System.in);
         while (true){
-            System.out.println("\nBir Kelime Yazıp Enter Tusuna Basınız (Çıkmak için 'exit' yazabilirsiniz)");
+            System.out.println("\nBir Kelime Yazip Enter Tusuna Basiniz (Cikmak icin 'exit' yazabilirsiniz)");
             String input = scanner.nextLine().trim();
             if(input.equalsIgnoreCase("exit")){
                 break;
             }
+            System.out.println("Yazdiginiz Kelime : " + input);
+            System.out.println("Olasi Kelimeler : ");
                 sozlukTree.gelenHarfeGoreKelimeTamamla(input);
+
         }
             scanner.close();
     }
