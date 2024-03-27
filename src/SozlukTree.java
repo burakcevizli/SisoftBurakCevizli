@@ -44,26 +44,29 @@ public class SozlukTree {
         return null;
     }
 
-    public void gelenHarfeGoreKelimeTamamla(String gelenHarf){
-        SozlukTreeNode node = gelenHarfeGoreNodeBul(root , gelenHarf);
-        if(node != null){
+    public void gelenHarfeGoreKelimeTamamla(String gelenHarf) {
+        SozlukTreeNode node = gelenHarfeGoreNodeBul(root, gelenHarf);
+        if (node != null) {
             List<String> kelimeler = new ArrayList<>();
-            kelimeleriTopla(node,kelimeler , new StringBuilder(gelenHarf));
-            for(String kelime : kelimeler){
+            kelimeleriTopla(node, kelimeler, new StringBuilder(gelenHarf));
+            for (String kelime : kelimeler) {
                 System.out.println(kelime);
             }
-        }else {
+        } else {
             System.out.println("Bu harfi içeren kelime bulunamadı.");
         }
     }
 
     private SozlukTreeNode gelenHarfeGoreNodeBul(SozlukTreeNode root, String gelenHarf) {
-        for(SozlukTreeNode dal : root.dallar){
-            if(dal.kelime.startsWith(gelenHarf)){
-                return dal;
+        SozlukTreeNode node = root;
+        for (int i = 0; i < gelenHarf.length(); i++) {
+            char c = gelenHarf.charAt(i);
+            node = charIleDalBul(node, c);
+            if (node == null) {
+                return null;
             }
         }
-        return null;
+        return node;
     }
 
     private void kelimeleriTopla(SozlukTreeNode node, List<String> kelimeler , StringBuilder kelime) {
@@ -71,7 +74,9 @@ public class SozlukTree {
             kelimeler.add(kelime.toString());
         }else{
             for(SozlukTreeNode dal : node.dallar){
-                kelimeleriTopla(dal,kelimeler , new StringBuilder(kelime).append(dal.kelime.charAt(dal.kelime.length() - 1)));
+                StringBuilder yeniKelime = new StringBuilder(kelime);
+                yeniKelime.append(dal.kelime.charAt(dal.kelime.length() - 1));
+                kelimeleriTopla(dal, kelimeler, yeniKelime);
             }
         }
     }

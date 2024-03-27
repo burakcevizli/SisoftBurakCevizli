@@ -7,12 +7,13 @@ public class MyTree {
             System.exit(1);
         }
         SozlukTree sozlukTree = new SozlukTree();
+        System.out.println("Sozluk Yukleniyor.Lutfen Bekleyin...");
         sozlukTree.sozluguYukle(args[0]);
-        System.out.println("Sözlük yüklendi");
+        System.out.println("Sozluk yuklendi");
 
         Scanner scanner = new Scanner(System.in);
         while (true){
-            System.out.println("\nBir Kelime Yazıp Enter Tuşuna Basınız (Çıkmak için 'exit' yazabilirsiniz)");
+            System.out.println("\nBir Kelime Yazıp Enter Tusuna Basınız (Çıkmak için 'exit' yazabilirsiniz)");
             String input = scanner.nextLine().trim();
             if(input.equalsIgnoreCase("exit")){
                 break;
