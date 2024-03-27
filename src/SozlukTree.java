@@ -9,48 +9,50 @@ public class SozlukTree {
         this.root = new SozlukTreeNode("");
     }
 
-    public void sozluguYukle(String dosyaAdi){
-        try{
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(dosyaAdi), "CP857"));
+    public void sozluguYukle(String dosyaAdi) {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(dosyaAdi))); //Dosya yüklemek için.
             String satir;
-            while ((satir = reader.readLine()) != null){
-                kelimeEkle(satir.trim());
+            while ((satir = reader.readLine()) != null) {
+                sozlukAgacinaKelimeEkle(satir.trim());
             }
             reader.close();
-        }catch (IOException e){
+        } catch (IOException e) {
             System.err.println("Sözlük işlenirken hata oluştu : " + e.getMessage());
         }
     }
 
-    private void kelimeEkle(String kelime) {
+    //Her bir satırda sözlükte kelime varsa
+    private void sozlukAgacinaKelimeEkle(String satir) {
         SozlukTreeNode guncelHali = root;
-        for (int i = 0; i < kelime.length(); i++) {
-            char c = kelime.charAt(i);
+        for (int i = 0; i < satir.length(); i++) {
+            char c = satir.charAt(i);
             SozlukTreeNode dal = charIleDalBul(guncelHali, c);
             if (dal == null) {
                 dal = new SozlukTreeNode(guncelHali.kelime + c);
-                guncelHali.dallar.add(dal);
+                guncelHali.dallar.add(dal); // Eğerki dal yoksa o kelimeyle dall ekle.
             }
             guncelHali = dal;
         }
-        // Son düğümü tamamlayıcı olarak işaretle
+        // Son harf düğümü için booleanı  tamamlayıcı olarak işaretledim.
         guncelHali.isTamamlayici = true;
     }
 
     private SozlukTreeNode charIleDalBul(SozlukTreeNode guncelHali, char c) {
         for (SozlukTreeNode dal : guncelHali.dallar) {
-            if (dal.kelime.length() > 0 && dal.kelime.charAt(dal.kelime.length() - 1) == c) {
-                return dal;
+            if (!dal.kelime.isEmpty() && dal.kelime.charAt(dal.kelime.length() - 1) == c) { // Alt düğümün kelimesinin son karakteri
+                return dal;                                                                  //verilen c değerine eşit mi diye bakıyoruz.
+                // Yani dal var mı yok mu diye bakıyoruz.
             }
         }
         return null;
     }
 
-    public void gelenHarfeGoreKelimeTamamla(String gelenHarf) {
-        SozlukTreeNode node = gelenHarfeGoreNodeBul(root, gelenHarf);
+    public void gelenKokKelimeyeGoreKelimeTamamla(String gelenKokKelime) {
+        SozlukTreeNode node = gelenHarfeGoreNodeBul(root, gelenKokKelime);
         if (node != null) {
             List<String> kelimeler = new ArrayList<>();
-            kelimeleriTopla(node, kelimeler, new StringBuilder(gelenHarf));
+            olasiKelimeleriTopla(node, kelimeler, new StringBuilder(gelenKokKelime));
             for (String kelime : kelimeler) {
                 System.out.println(kelime);
             }
@@ -59,10 +61,10 @@ public class SozlukTree {
         }
     }
 
-    private SozlukTreeNode gelenHarfeGoreNodeBul(SozlukTreeNode root, String gelenHarf) {
+    private SozlukTreeNode gelenHarfeGoreNodeBul(SozlukTreeNode root, String gelenKokKelime) {
         SozlukTreeNode node = root;
-        for (int i = 0; i < gelenHarf.length(); i++) {
-            char c = gelenHarf.charAt(i);
+        for (int i = 0; i < gelenKokKelime.length(); i++) {
+            char c = gelenKokKelime.charAt(i);
             node = charIleDalBul(node, c);
             if (node == null) {
                 return null;
@@ -71,14 +73,14 @@ public class SozlukTree {
         return node;
     }
 
-    private void kelimeleriTopla(SozlukTreeNode node, List<String> kelimeler, StringBuilder gelenHarf) {
+    private void olasiKelimeleriTopla(SozlukTreeNode node, List<String> kelimeler, StringBuilder gelenKokKelime) {
         if (node.isTamamlayici) {
-            kelimeler.add(gelenHarf.toString());
+            kelimeler.add(gelenKokKelime.toString());
         }
         for (SozlukTreeNode dal : node.dallar) {
-            StringBuilder yeniKelime = new StringBuilder(gelenHarf);
-            yeniKelime.append(dal.kelime.substring(gelenHarf.length()));
-            kelimeleriTopla(dal, kelimeler, yeniKelime);
+            StringBuilder yeniKelime = new StringBuilder(gelenKokKelime);
+            yeniKelime.append(dal.kelime.substring(gelenKokKelime.length()));
+            olasiKelimeleriTopla(dal, kelimeler, yeniKelime);
         }
     }
 
