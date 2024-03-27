@@ -59,10 +59,24 @@ public class SozlukTree {
         }
     }
 
+    private SozlukTreeNode gelenHarfeGoreNodeBul(SozlukTreeNode root, String gelenHarf) {
+        for(SozlukTreeNode dal : root.dallar){
+            if(dal.kelime.startsWith(gelenHarf)){
+                return dal;
+            }
+        }
+        return null;
+    }
 
-
-
-
+    private void kelimeleriTopla(SozlukTreeNode node, List<String> kelimeler) {
+        if(node.dallar.isEmpty()){
+            kelimeler.add(node.kelime);
+        }else{
+            for(SozlukTreeNode dal : node.dallar){
+                kelimeleriTopla(dal,kelimeler);
+            }
+        }
+    }
 
 
 
