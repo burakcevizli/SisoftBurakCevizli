@@ -1,0 +1,1 @@
+Sözlük Projesi - Sisoft Yazılım
