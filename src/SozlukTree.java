@@ -1,19 +1,17 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class SozlukTree {
 
     SozlukTreeNode root;
 
-    public SozlukTree(SozlukTreeNode root) {
+    public SozlukTree() {
         this.root = new SozlukTreeNode("");
     }
 
     public void sozluguYukle(String dosyaAdi){
         try{
-            BufferedReader reader = new BufferedReader(new FileReader(dosyaAdi));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(dosyaAdi), "UTF-8"));
             String satir;
             while ((satir = reader.readLine()) != null){
                 kelimeEkle(satir.trim());
@@ -50,7 +48,7 @@ public class SozlukTree {
         SozlukTreeNode node = gelenHarfeGoreNodeBul(root , gelenHarf);
         if(node != null){
             List<String> kelimeler = new ArrayList<>();
-            kelimeleriTopla(node,kelimeler);
+            kelimeleriTopla(node,kelimeler , new StringBuilder(gelenHarf));
             for(String kelime : kelimeler){
                 System.out.println(kelime);
             }
@@ -68,17 +66,13 @@ public class SozlukTree {
         return null;
     }
 
-    private void kelimeleriTopla(SozlukTreeNode node, List<String> kelimeler) {
+    private void kelimeleriTopla(SozlukTreeNode node, List<String> kelimeler , StringBuilder kelime) {
         if(node.dallar.isEmpty()){
-            kelimeler.add(node.kelime);
+            kelimeler.add(kelime.toString());
         }else{
             for(SozlukTreeNode dal : node.dallar){
-                kelimeleriTopla(dal,kelimeler);
+                kelimeleriTopla(dal,kelimeler , new StringBuilder(kelime).append(dal.kelime.charAt(dal.kelime.length() - 1)));
             }
         }
     }
-
-
-
-
 }
